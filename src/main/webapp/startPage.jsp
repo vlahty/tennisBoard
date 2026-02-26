@@ -12,21 +12,6 @@
     <li><a href="/matches">Завершенные матчи</a></li>
 </ul>
 
-<hr>
-
-<h2>Быстрый переход</h2>
-<form action="/new-match" method="get">
-    <button type="submit">Начать новый матч</button>
-</form>
-
-<br>
-
-<form action="/matches" method="get">
-    <button type="submit">Посмотреть завершенные матчи</button>
-</form>
-
-<hr>
-
-<p>Теннисный табло - приложение для отслеживания теннисных матчей</p>
+<p>Теннисное табло - приложение для отслеживания теннисных матчей</p>
 </body>
 </html>
