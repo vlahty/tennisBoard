@@ -1,24 +1,17 @@
 package services;
 
-import model.Match;
-import model.Player;
+import repositories.PlayerRepository;
+import utils.HibernateRunner;
 
 public class EntitiesValidator{
-    private final Player player;
+    private final static PlayerRepository PLAYER_SERVICE = new PlayerRepository(HibernateRunner.buildSessionFactory());
 
-    public EntitiesValidator(Player player, Match match) {
-        this.player = player;
+    public EntitiesValidator() {
     }
 
-    public static boolean isPlayersNameUniqueAndNotNull(String firstPlayerName, String secondPlayerName){
+    public static boolean isPlayerValid(String playerName){
 
-        if (firstPlayerName == null || secondPlayerName == null)
-            return false;
-
-        if (firstPlayerName.trim().isEmpty() || secondPlayerName.trim().isEmpty())
-            return false;
-
-        return firstPlayerName.equals(secondPlayerName);
+        return false;
     }
 
 }

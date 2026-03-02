@@ -1,7 +1,7 @@
-package util;
+package utils;
 
-import model.Match;
-import model.Player;
+import models.Match;
+import models.Player;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 

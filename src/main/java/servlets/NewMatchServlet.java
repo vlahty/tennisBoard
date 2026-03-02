@@ -6,15 +6,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import util.HibernateRunner;
+import models.Match;
+import services.OngoingMatchesService;
 
 import java.io.IOException;
 
 @WebServlet("/new-match")
 public class NewMatchServlet extends HttpServlet {
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -23,9 +22,20 @@ public class NewMatchServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String player1Name = req.getParameter("player1");
-        String player2Name = req.getParameter("player2");
 
+        String playerName1 = req.getParameter("player1");
+        String playerName2 = req.getParameter("player2");
 
+        OngoingMatchesService ongoingMatchesService = (OngoingMatchesService) req.getServletContext()
+                .getAttribute("ongoingMatchesService");
+
+        Match currentMatch = ongoingMatchesService.createNewMatch(playerName1, playerName2);
+
+        resp.sendRedirect(req.getContextPath() + "/match-score?uuid=" + currentMatch.getId());
     }
+
 }
+
+
+
+

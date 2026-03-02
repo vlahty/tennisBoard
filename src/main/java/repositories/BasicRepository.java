@@ -1,6 +1,5 @@
-package dao;
+package repositories;
 
-import lombok.Cleanup;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -17,14 +16,14 @@ public abstract class BasicRepository<E, T extends Serializable> implements Repo
         this.sessionFactory = sessionFactory;
         this.clazz = clazz;
     }
-    
-    private Session getCurrentSession(){
+
+    private Session getCurrentSession() {
         return sessionFactory.getCurrentSession();
     }
 
     @Override
     public List<E> findAll() {
-         Session session = getCurrentSession();
+        Session session = getCurrentSession();
 
         var criteria = session.getCriteriaBuilder().createQuery(clazz);
         criteria.from(clazz);
@@ -34,30 +33,44 @@ public abstract class BasicRepository<E, T extends Serializable> implements Repo
 
     @Override
     public Optional<E> findByName(String name) {
-         Session session = getCurrentSession();
+        Session session = getCurrentSession();
 
-        var cb = session.getCriteriaBuilder();
-        var criteria = cb.createQuery(clazz);
-        var root = criteria.from(clazz);
+        String hql = " FROM " + clazz.getSimpleName() + " WHERE lower(name) = LOWER(:name) ";
 
-        criteria.select(root)
-                .where(cb.equal(cb.lower(root.get("name")), name.toLowerCase()));
+        return session.createQuery(hql, clazz)
+                .setParameter("name", name)
+                .getResultList()
+                .stream()
+                .findFirst();
 
-        E singleResult = session.createQuery(criteria).getSingleResult();
+        /*try {
+            var cb = session.getCriteriaBuilder();
+            var criteria = cb.createQuery(clazz);
+            var root = criteria.from(clazz);
 
-        return Optional.ofNullable(singleResult);
+            criteria.select(root)
+                    .where(cb.equal(cb.lower(root.get("name")), name.toLowerCase()));
+
+            //Возможно выбросит NoResultException
+            E singleResult = session.createQuery(criteria).getSingleResult();
+
+            return Optional.ofNullable(singleResult);*//*
+
+        } catch (NoResultException er){
+            return Optional.empty();
+        }*/
     }
 
     @Override
     public Optional<E> findById(T id) {
-         Session session = getCurrentSession();
+        Session session = getCurrentSession();
 
         return Optional.ofNullable(session.find(clazz, id));
     }
 
     @Override
     public E save(E entity) {
-         Session session = getCurrentSession();
+        Session session = getCurrentSession();
 
         session.persist(entity);
         //session.flush();
@@ -67,14 +80,14 @@ public abstract class BasicRepository<E, T extends Serializable> implements Repo
 
     @Override
     public void update(E entity) {
-         Session session = getCurrentSession();
+        Session session = getCurrentSession();
 
         session.merge(entity);
     }
 
     @Override
     public int delete(T id) {
-         Session session = getCurrentSession();
+        Session session = getCurrentSession();
 
         return session.createMutationQuery(
                         "DELETE FROM " + clazz.getSimpleName() + " WHERE id = :id")
