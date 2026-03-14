@@ -1,17 +1,15 @@
 package services;
 
-import controllers.MatchGeneratorController;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
-import models.Match;
 import models.Player;
-import models.secondary.MatchDTO;
-import models.secondary.Score;
+import models.additional.MatchScore;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import repositories.PlayerRepository;
 import utils.HibernateRunner;
 
 import java.util.Map;
@@ -21,51 +19,48 @@ import java.util.concurrent.ConcurrentHashMap;
 @WebListener
 public class OngoingMatchesService implements ServletContextListener {
 
-    private final Map<UUID, MatchDTO> ongoingMatches = new ConcurrentHashMap<>();
+    private final Map<UUID, MatchScore> ongoingMatches = new ConcurrentHashMap<>();
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
 
-        System.out.println(">>> OngoingMatchesService: CONTEXT INITIALIZED! <<<");
-
         ServletContext servletContext = sce.getServletContext();
-
         servletContext.setAttribute("ongoingMatchesService", this);
     }
 
-    public Match createNewMatch(String playerName1, String playerName2) {
+    public MatchScore getOngoingMatchScore(UUID matchId) {
+
+        return ongoingMatches.get(matchId);
+    }
+
+    public void deleteFromOngoingMatches(UUID matchId){
+        ongoingMatches.remove(matchId);
+    }
+
+    public MatchScore generateNewMatchScore(String playerName1, String playerName2) {
 
         try (SessionFactory sessionFactory = HibernateRunner.buildSessionFactory()) {
-            Session currentSession = sessionFactory.getCurrentSession();
-            Transaction transaction = currentSession.beginTransaction();
+            Session session = sessionFactory.getCurrentSession();
+            Transaction transaction = session.beginTransaction();
 
-            Match match = MatchGeneratorController.generateNewMatch(playerName1, playerName2);
-            UUID uuid = UUID.randomUUID();
-            match.setId(uuid);
+            PlayerRepository playerRepository = new PlayerRepository(sessionFactory);
 
+            if (playerRepository.findByName(playerName1).isEmpty()) {
+                playerRepository.save(Player.builder().name(playerName1).build());
+            }
 
-            ongoingMatches.put(uuid, MatchDTO.builder()
-                            .id(uuid)
-                            .player1(Player.builder().name(playerName1).build())
-                            .player2(Player.builder().name(playerName2).build())
-                            .score(new Score(20))
-                    .build());
+            if (playerRepository.findByName(playerName2).isEmpty()) {
+                playerRepository.save(Player.builder().name(playerName2).build());
+            }
+
+            MatchScore matchScore = new MatchScore(UUID.randomUUID(), playerName1, playerName2);
+
+            this.ongoingMatches.put(matchScore.getMatchId(), matchScore);
 
             transaction.commit();
 
-            return match;
+            return matchScore;
         }
-
-    }
-
-    public Score getOngoingMatchScore(UUID matchUUID) {
-
-        return ongoingMatches.get(matchUUID).getScore();
-    }
-
-    public MatchDTO getOngoingMatchDTO(UUID matchUUID) {
-
-        return ongoingMatches.get(matchUUID);
     }
 
 }

@@ -1,4 +1,4 @@
-package servlets;
+package controllers;
 
 
 import jakarta.servlet.ServletException;
@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import models.Match;
+import models.additional.MatchScore;
 import services.OngoingMatchesService;
 
 import java.io.IOException;
@@ -26,12 +27,14 @@ public class NewMatchServlet extends HttpServlet {
         String playerName1 = req.getParameter("player1");
         String playerName2 = req.getParameter("player2");
 
-        OngoingMatchesService ongoingMatchesService = (OngoingMatchesService) req.getServletContext()
+        //TODO: Добавить проверку на уникальность playerNames
+
+        OngoingMatchesService oms = (OngoingMatchesService) req.getServletContext()
                 .getAttribute("ongoingMatchesService");
 
-        Match currentMatch = ongoingMatchesService.createNewMatch(playerName1, playerName2);
+        MatchScore ms = oms.generateNewMatchScore(playerName1, playerName2);
 
-        resp.sendRedirect(req.getContextPath() + "/match-score?uuid=" + currentMatch.getId());
+        resp.sendRedirect(req.getContextPath() + "/match-score?uuid=" + ms.getMatchId());
     }
 
 }

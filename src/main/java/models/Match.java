@@ -13,7 +13,6 @@ import java.util.UUID;
 @Table(name = "matches")
 public class Match {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private UUID id;
 

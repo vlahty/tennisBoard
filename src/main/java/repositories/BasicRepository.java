@@ -43,22 +43,6 @@ public abstract class BasicRepository<E, T extends Serializable> implements Repo
                 .stream()
                 .findFirst();
 
-        /*try {
-            var cb = session.getCriteriaBuilder();
-            var criteria = cb.createQuery(clazz);
-            var root = criteria.from(clazz);
-
-            criteria.select(root)
-                    .where(cb.equal(cb.lower(root.get("name")), name.toLowerCase()));
-
-            //Возможно выбросит NoResultException
-            E singleResult = session.createQuery(criteria).getSingleResult();
-
-            return Optional.ofNullable(singleResult);*//*
-
-        } catch (NoResultException er){
-            return Optional.empty();
-        }*/
     }
 
     @Override
@@ -73,7 +57,6 @@ public abstract class BasicRepository<E, T extends Serializable> implements Repo
         Session session = getCurrentSession();
 
         session.persist(entity);
-        //session.flush();
 
         return entity;
     }
@@ -83,6 +66,8 @@ public abstract class BasicRepository<E, T extends Serializable> implements Repo
         Session session = getCurrentSession();
 
         session.merge(entity);
+
+
     }
 
     @Override
