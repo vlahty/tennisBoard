@@ -1,9 +1,11 @@
 package repositories;
 
+import models.Match;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +23,24 @@ public abstract class BasicRepository<E, T extends Serializable> implements Repo
         return sessionFactory.getCurrentSession();
     }
 
+    public List<E> findAll(int page, int pageSize, String sortedBy) {
+
+        Session session = getCurrentSession();
+
+        //TODO: Можно ли убрать e?
+        //TODO: Когда использовать createSelectionQuery и createQuery?
+        String hql = " FROM " + clazz.getSimpleName() + " e ORDER BY :id";
+
+        return session.createSelectionQuery(hql, clazz)
+                .setParameter("id", sortedBy)
+                .setFirstResult((page - 1) * pageSize)
+                .setMaxResults(pageSize)
+                .getResultList();
+    }
+
+
+
+
     @Override
     public List<E> findAll() {
         Session session = getCurrentSession();
@@ -31,6 +51,7 @@ public abstract class BasicRepository<E, T extends Serializable> implements Repo
         return session.createQuery(criteria).getResultList();
     }
 
+    //TODO: Если использовать в Match будет выдавать ошибку
     @Override
     public Optional<E> findByName(String name) {
         Session session = getCurrentSession();
@@ -44,6 +65,7 @@ public abstract class BasicRepository<E, T extends Serializable> implements Repo
                 .findFirst();
 
     }
+
 
     @Override
     public Optional<E> findById(T id) {

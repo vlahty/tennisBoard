@@ -72,11 +72,13 @@
         .player1-btn {
             background-color: #4CAF50;
             color: white;
+            font-weight: bold;
         }
 
         .player2-btn {
             background-color: #2196F3;
             color: white;
+            font-weight: bold;
         }
 
         /* Убираем стандартные отступы у форм */
@@ -93,12 +95,12 @@
     <div class="buttons-container">
         <form action="${pageContext.request.contextPath}/match-score?uuid=${requestScope.matchScore.matchId}" method="post">
             <input type="hidden" name="action" value="player1">
-            <button type="submit" class="player-button player1-btn">+ Player 1</button>
+            <button type="submit" class="player-button player1-btn">Очко игроку 1</button>
         </form>
 
         <form action="${pageContext.request.contextPath}/match-score?uuid=${requestScope.matchScore.matchId}" method="post">
             <input type="hidden" name="action" value="player2">
-            <button type="submit" class="player-button player2-btn">+ Player 2</button>
+            <button type="submit" class="player-button player2-btn">Очко игроку 2</button>
         </form>
     </div>
 
@@ -106,10 +108,10 @@
     <table>
         <thead>
         <tr>
-            <th>Player</th>
-            <th>Points</th>
-            <th>Games</th>
-            <th>Sets</th>
+            <th>ИГРОКИ</th>
+            <th>ГЕЙМ</th>
+            <th>СЕТ</th>
+            <th>СЧЕТ</th>
         </tr>
         </thead>
         <tbody>
@@ -125,10 +127,7 @@
             <td class="score-games2">${requestScope.matchScore.player2Games}</td>
             <td class="score-sets2">${requestScope.matchScore.player2Sets}</td>
         </tr>
-        <tr>
-            <td class="winnerName">winner:</td>
-            <td class="winner" colspan="3">${requestScope.winner}</td>
-        </tr>
+
         </tbody>
     </table>
 </div>

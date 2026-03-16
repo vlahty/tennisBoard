@@ -19,6 +19,7 @@ import utils.HibernateRunner;
 import java.io.IOException;
 import java.util.UUID;
 
+//TODO: При ошибке матч сохраняется в БД
 @WebServlet("/match-score")
 public class MatchScoreServlet extends HttpServlet {
 
