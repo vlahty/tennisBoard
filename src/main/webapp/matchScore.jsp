@@ -117,15 +117,15 @@
         <tbody>
         <tr>
             <td class="player-name1">${requestScope.matchScore.player1Name}</td>
-            <td class="score-points1">${requestScope.matchScore.player1Points}</td>
-            <td class="score-games1">${requestScope.matchScore.player1Games}</td>
-            <td class="score-sets1">${requestScope.matchScore.player1Sets}</td>
+            <td class="score-points1">${requestScope.display.player1Points}</td>
+            <td class="score-games1">${requestScope.display.player1Games}</td>
+            <td class="score-sets1">${requestScope.display.player1Sets}</td>
         </tr>
         <tr>
             <td class="player-name2">${requestScope.matchScore.player2Name}</td>
-            <td class="score-points2">${requestScope.matchScore.player2Points}</td>
-            <td class="score-games2">${requestScope.matchScore.player2Games}</td>
-            <td class="score-sets2">${requestScope.matchScore.player2Sets}</td>
+            <td class="score-points2">${requestScope.display.player2Points}</td>
+            <td class="score-games2">${requestScope.display.player2Games}</td>
+            <td class="score-sets2">${requestScope.display.player2Sets}</td>
         </tr>
 
         </tbody>

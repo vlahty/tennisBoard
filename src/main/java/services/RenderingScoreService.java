@@ -13,11 +13,13 @@ import java.util.UUID;
 
 public class RenderingScoreService {
 
+    CalculatingScoreService calculatingScoreService;
 
+    public RenderingScoreService(CalculatingScoreService calculatingScoreService) {
+        this.calculatingScoreService = calculatingScoreService;
+    }
 
-
-    public void updateScore(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-
+    public void check(){
 
 
     }

@@ -19,7 +19,7 @@ import java.util.List;
 @WebServlet("/matches")
 public class CompletedMatchesServlet extends HttpServlet {
 
-    private final int PAGE_SIZE = 2; // Количество матчей на странице
+    private final int PAGE_SIZE = 5; // Количество матчей на странице
     private MatchRepository matchRepository;
 
 

@@ -25,6 +25,8 @@ public class MatchScoreServlet extends HttpServlet {
 
     private MatchScore matchScore;
     private OngoingMatchesService ongoingMatchesService;
+    private CalculatingScoreService calculatingScoreService;
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -37,22 +39,21 @@ public class MatchScoreServlet extends HttpServlet {
                 UUID.fromString(
                         req.getParameter("uuid")));
 
-        req.setAttribute("matchScore", matchScore);
+        calculatingScoreService = new CalculatingScoreService(matchScore);
 
+        req.setAttribute("matchScore", matchScore);
+        req.setAttribute("display", calculatingScoreService.getScoreDisplay());
         req.getRequestDispatcher("matchScore.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        CalculatingScoreService calculatingScoreService;
-
-        calculatingScoreService = new CalculatingScoreService(matchScore);
 
         try (SessionFactory sessionFactory = HibernateRunner.buildSessionFactory()) {
+
             Session currentSession = sessionFactory.getCurrentSession();
             MatchRepository matchRepository = new MatchRepository(sessionFactory);
-
             Transaction transaction = currentSession.beginTransaction();
 
             String pointWinner = req.getParameter("action");
@@ -82,6 +83,7 @@ public class MatchScoreServlet extends HttpServlet {
         }
 
         req.setAttribute("matchScore", matchScore);
+        req.setAttribute("display", calculatingScoreService.getScoreDisplay());
 
         req.getRequestDispatcher("matchScore.jsp").forward(req, resp);
     }
