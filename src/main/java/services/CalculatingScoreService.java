@@ -1,7 +1,6 @@
 package services;
 
 import models.additional.MatchScore;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +20,45 @@ public class CalculatingScoreService {
             // 2. Обычный гейм
             handleRegularGamePoint(playerNumber);
         }
+    }
+
+    public String convertPointsToScore(int playerPoints, int opponentPoints){
+
+        if (playerPoints == 0) return "0";
+        if (playerPoints == 1) return "15";
+        if (playerPoints == 2) return "30";
+        if (playerPoints == 3) return "40";
+
+        if (playerPoints >3){
+            if (playerPoints - opponentPoints >=1){
+                return "AD";
+            } else  return "40";
+        }
+
+        return String.valueOf(playerPoints);
+    }
+
+    public Map<String, Object> getScoreDisplay() {
+        Map<String, Object> display = new HashMap<>();
+
+        // Счёт в текущем гейме в теннисной нотации
+        display.put("player1Points",
+                convertPointsToScore(ms.getPlayer1Points(), ms.getPlayer2Points()));
+        display.put("player2Points",
+                convertPointsToScore(ms.getPlayer2Points(), ms.getPlayer1Points()));
+
+        // Счёт по геймам (обычные цифры)
+        display.put("player1Games", ms.getPlayer1Games());
+        display.put("player2Games", ms.getPlayer2Games());
+
+        // Счёт по сетам
+        display.put("player1Sets", ms.getPlayer1Sets());
+        display.put("player2Sets", ms.getPlayer2Sets());
+
+        // Информация о тай-брейке
+        display.put("isTieBreak", ms.isTieBreak());
+
+        return display;
     }
 
     private void handleRegularGamePoint(int playerNumber) {
@@ -104,44 +142,5 @@ public class CalculatingScoreService {
             ms.setMatchFinished(true);
             ms.setWinner(2);
         }
-    }
-
-    public String convertPointsToScore(int playerPoints, int opponentPoints){
-
-        if (playerPoints == 0) return "0";
-        if (playerPoints == 1) return "15";
-        if (playerPoints == 2) return "30";
-        if (playerPoints == 3) return "40";
-
-        if (playerPoints >3){
-            if (playerPoints - opponentPoints >=1){
-                return "AD";
-            } else  return "40";
-        }
-
-        return String.valueOf(playerPoints);
-    }
-
-    public Map<String, Object> getScoreDisplay() {
-        Map<String, Object> display = new HashMap<>();
-
-        // Счёт в текущем гейме в теннисной нотации
-        display.put("player1Points",
-                convertPointsToScore(ms.getPlayer1Points(), ms.getPlayer2Points()));
-        display.put("player2Points",
-                convertPointsToScore(ms.getPlayer2Points(), ms.getPlayer1Points()));
-
-        // Счёт по геймам (обычные цифры)
-        display.put("player1Games", ms.getPlayer1Games());
-        display.put("player2Games", ms.getPlayer2Games());
-
-        // Счёт по сетам
-        display.put("player1Sets", ms.getPlayer1Sets());
-        display.put("player2Sets", ms.getPlayer2Sets());
-
-        // Информация о тай-брейке
-        display.put("isTieBreak", ms.isTieBreak());
-
-        return display;
     }
 }

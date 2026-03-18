@@ -117,6 +117,7 @@
             border-radius: 4px;
             transition: background-color 0.3s;
         }
+
         .home-link:hover {
             background-color: #e0e0e0;
         }
@@ -196,7 +197,6 @@
     </a>
 
 </div>
-
 
 </body>
 </html>

@@ -1,18 +1,17 @@
 package services;
 
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
+import jakarta.servlet.http.HttpServletRequest;
 import models.Player;
 import models.additional.MatchScore;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import repositories.PlayerRepository;
-import utils.HibernateRunner;
-
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,44 +22,37 @@ public class OngoingMatchesService implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-
-        ServletContext servletContext = sce.getServletContext();
-        servletContext.setAttribute("ongoingMatchesService", this);
+        sce.getServletContext().setAttribute("ongoingMatchesService", this);
     }
 
-    public MatchScore getOngoingMatchScore(UUID matchId) {
-
-        return ongoingMatches.get(matchId);
+    public Optional<MatchScore> getOngoingMatchScore(UUID matchId) {
+        return Optional.ofNullable(ongoingMatches.get(matchId));
     }
 
-    public void deleteFromOngoingMatches(UUID matchId){
+    public void deleteFromOngoingMatches(UUID matchId) {
         ongoingMatches.remove(matchId);
     }
 
-    public MatchScore generateNewMatchScore(String playerName1, String playerName2) {
+    public MatchScore generateNewMatchScore(HttpServletRequest req, String playerName1, String playerName2) {
+        SessionFactory sessionFactory = (SessionFactory)
+                req.getServletContext().getAttribute("sessionFactory");
+        Session session = sessionFactory.getCurrentSession();
 
-        try (SessionFactory sessionFactory = HibernateRunner.buildSessionFactory()) {
-            Session session = sessionFactory.getCurrentSession();
-            Transaction transaction = session.beginTransaction();
+        Transaction transaction = session.beginTransaction();
 
-            PlayerRepository playerRepository = new PlayerRepository(sessionFactory);
+        PlayerRepository playerRepository = new PlayerRepository(sessionFactory);
 
-            if (playerRepository.findByName(playerName1).isEmpty()) {
-                playerRepository.save(Player.builder().name(playerName1).build());
-            }
+        if (playerRepository.findByName(playerName1).isEmpty())
+            playerRepository.save(Player.builder().name(playerName1).build());
+        if (playerRepository.findByName(playerName2).isEmpty())
+            playerRepository.save(Player.builder().name(playerName2).build());
 
-            if (playerRepository.findByName(playerName2).isEmpty()) {
-                playerRepository.save(Player.builder().name(playerName2).build());
-            }
+        MatchScore matchScore = new MatchScore(UUID.randomUUID(), playerName1, playerName2);
 
-            MatchScore matchScore = new MatchScore(UUID.randomUUID(), playerName1, playerName2);
+        this.ongoingMatches.put(matchScore.getMatchId(), matchScore);
 
-            this.ongoingMatches.put(matchScore.getMatchId(), matchScore);
+        transaction.commit();
 
-            transaction.commit();
-
-            return matchScore;
-        }
+        return matchScore;
     }
-
 }

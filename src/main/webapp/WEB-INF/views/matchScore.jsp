@@ -13,8 +13,6 @@
             background-color: #f5f5f5;
         }
 
-
-
         table {
             border-collapse: collapse;
             width: 700px;
@@ -131,7 +129,6 @@
         </tbody>
     </table>
 </div>
-
 
 </body>
 </html>

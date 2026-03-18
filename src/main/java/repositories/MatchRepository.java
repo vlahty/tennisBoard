@@ -3,15 +3,11 @@ package repositories;
 import models.Match;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import utils.HibernateRunner;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class MatchRepository extends BasicRepository<Match, Integer> {
 
     SessionFactory sessionFactory;
-
 
     public MatchRepository(SessionFactory sessionFactory) {
         super(sessionFactory, Match.class);
@@ -40,7 +36,6 @@ public class MatchRepository extends BasicRepository<Match, Integer> {
 
         return session.createQuery(hql, Long.class)
                 .getSingleResult();
-
     }
 
     public long totalPagesForNamedMatches(String name) {
@@ -53,8 +48,5 @@ public class MatchRepository extends BasicRepository<Match, Integer> {
         return session.createQuery(hql, Long.class)
                 .setParameter("name", name)
                 .getSingleResult();
-
     }
-
-
 }

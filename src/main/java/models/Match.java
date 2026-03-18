@@ -2,7 +2,6 @@ package models;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.UUID;
 
 @Data
@@ -13,19 +12,17 @@ import java.util.UUID;
 @Table(name = "matches")
 public class Match {
     @Id
-    @Column(name = "id", nullable = false)
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "player1", nullable = false)
+    @JoinColumn(name = "player1")
     private Player player1;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "player2", nullable = false)
+    @JoinColumn(name = "player2")
     private Player player2;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "winner")
     private Player winner;
-
 }

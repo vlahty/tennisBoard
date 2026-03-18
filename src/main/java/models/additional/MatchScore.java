@@ -1,8 +1,6 @@
 package models.additional;
 
 import lombok.*;
-import models.Player;
-
 import java.util.UUID;
 
 @Getter
@@ -27,5 +25,4 @@ public class MatchScore {
         this.player1Name = player1Name;
         this.player2Name = player2Name;
     }
-
 }

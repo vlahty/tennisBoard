@@ -2,10 +2,8 @@ package utils;
 
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
-
 import static utils.PropertiesUtil.getProperty;
 
 @UtilityClass

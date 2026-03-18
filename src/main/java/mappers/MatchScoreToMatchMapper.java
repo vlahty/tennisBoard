@@ -1,5 +1,7 @@
 package mappers;
 
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.Cleanup;
 import models.Match;
 import models.Player;
 import models.additional.MatchScore;
@@ -7,40 +9,33 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import repositories.PlayerRepository;
-import utils.HibernateRunner;
 
 public class MatchScoreToMatchMapper {
 
+    public static Match getMatch(HttpServletRequest req, MatchScore matchScore) {
 
-    public static Match getMatch(MatchScore matchScore) {
+        Player player1;
+        Player player2;
+        SessionFactory sessionFactory = (SessionFactory)
+                req.getServletContext().getAttribute("sessionFactory");
+        @Cleanup Session session = sessionFactory.openSession();
 
+        Transaction transaction = session.beginTransaction();
 
-        try (SessionFactory sessionFactory = HibernateRunner.buildSessionFactory()) {
-            var session = sessionFactory.getCurrentSession();
-            var transaction = session.beginTransaction();
+        PlayerRepository playerRepository = new PlayerRepository(sessionFactory);
+        if (playerRepository.findByName(matchScore.getPlayer1Name()).isPresent()) {
+            player1 = playerRepository.findByName(matchScore.getPlayer1Name()).get();
+        } else player1 = new Player();
+        if (playerRepository.findByName(matchScore.getPlayer2Name()).isPresent()) {
+            player2 = playerRepository.findByName(matchScore.getPlayer2Name()).get();
+        } else player2 = new Player();
+        transaction.commit();
 
-            PlayerRepository playerRepository = new PlayerRepository(sessionFactory);
-            Player player1;
-            Player player2;
-
-            if (playerRepository.findByName(matchScore.getPlayer1Name()).isPresent()) {
-                player1 = playerRepository.findByName(matchScore.getPlayer1Name()).get();
-            } else player1 = new Player();
-            if (playerRepository.findByName(matchScore.getPlayer2Name()).isPresent()) {
-                player2 = playerRepository.findByName(matchScore.getPlayer2Name()).get();
-            } else player2 = new Player();
-
-            transaction.commit();
-
-
-            return Match.builder()
-                    .id(matchScore.getMatchId())
-                    .player1(player1)
-                    .player2(player2)
-                    .winner(matchScore.getWinner() == 1 ? player1 : player2)
-                    .build();
-        }
+        return Match.builder()
+                .id(matchScore.getMatchId())
+                .player1(player1)
+                .player2(player2)
+                .winner(matchScore.getWinner() == 1 ? player1 : player2)
+                .build();
     }
-
-
 }

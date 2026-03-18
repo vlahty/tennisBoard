@@ -12,10 +12,7 @@ import lombok.*;
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Integer id;
-
-    @Column(name = "name", nullable = false, length = 32)
     private String name;
 
 }

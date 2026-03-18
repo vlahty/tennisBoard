@@ -1,11 +1,8 @@
 package repositories;
 
-import models.Match;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,12 +21,9 @@ public abstract class BasicRepository<E, T extends Serializable> implements Repo
     }
 
     public List<E> findAll(int page, int pageSize, String sortedBy) {
-
         Session session = getCurrentSession();
 
-        //TODO: Можно ли убрать e?
-        //TODO: Когда использовать createSelectionQuery и createQuery?
-        String hql = " FROM " + clazz.getSimpleName() + " e ORDER BY :id";
+        String hql = " FROM " + clazz.getSimpleName() + " ORDER BY :id";
 
         return session.createSelectionQuery(hql, clazz)
                 .setParameter("id", sortedBy)
@@ -37,9 +31,6 @@ public abstract class BasicRepository<E, T extends Serializable> implements Repo
                 .setMaxResults(pageSize)
                 .getResultList();
     }
-
-
-
 
     @Override
     public List<E> findAll() {
@@ -51,22 +42,6 @@ public abstract class BasicRepository<E, T extends Serializable> implements Repo
         return session.createQuery(criteria).getResultList();
     }
 
-    //TODO: Если использовать в Match будет выдавать ошибку
-    @Override
-    public Optional<E> findByName(String name) {
-        Session session = getCurrentSession();
-
-        String hql = " FROM " + clazz.getSimpleName() + " WHERE lower(name) = LOWER(:name) ";
-
-        return session.createQuery(hql, clazz)
-                .setParameter("name", name)
-                .getResultList()
-                .stream()
-                .findFirst();
-
-    }
-
-
     @Override
     public Optional<E> findById(T id) {
         Session session = getCurrentSession();
@@ -75,12 +50,10 @@ public abstract class BasicRepository<E, T extends Serializable> implements Repo
     }
 
     @Override
-    public E save(E entity) {
+    public void save(E entity) {
         Session session = getCurrentSession();
 
         session.persist(entity);
-
-        return entity;
     }
 
     @Override
@@ -88,8 +61,6 @@ public abstract class BasicRepository<E, T extends Serializable> implements Repo
         Session session = getCurrentSession();
 
         session.merge(entity);
-
-
     }
 
     @Override
