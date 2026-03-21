@@ -5,6 +5,8 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@Builder
 public class MatchScore {
 
     private UUID matchId;

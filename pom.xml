@@ -6,14 +6,13 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <!-- Базовые координаты проекта -->
   <groupId>org.example</groupId>
   <artifactId>crudProject</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>war</packaging>
 
-  <name>crud-webapp</name>
-  <description>crud-приложение</description>
+  <name>tennis-webapp</name>
+  <description>tennis scoreboard application</description>
 
   <!-- Свойства проекта -->
   <properties>
@@ -42,7 +41,9 @@
 
     <!-- Версии тестирования -->
     <junit.version>5.9.1</junit.version>
+    <h2.version>2.3.232</h2.version>
     <mockito.version>4.8.0</mockito.version>
+    <assertj.version>3.27.7</assertj.version>
 
     <!-- Версии плагинов Maven -->
     <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
@@ -111,13 +112,6 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- Jackson для JSON (если нужен REST API) -->
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>${jackson.version}</version>
-    </dependency>
-
     <!-- Тестирование: JUnit 5 -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -139,6 +133,23 @@
       <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
+
+    <!-- Source: https://mvnrepository.com/artifact/com.h2database/h2 -->
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>${h2.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Source: https://mvnrepository.com/artifact/org.assertj/assertj-core -->
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>${assertj.version}</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <!-- Настройки сборки -->
