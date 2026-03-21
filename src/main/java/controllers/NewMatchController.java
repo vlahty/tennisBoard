@@ -31,7 +31,3 @@ public class NewMatchController extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/match-score?uuid=" + ms.getMatchId());
     }
 }
-
-
-
-

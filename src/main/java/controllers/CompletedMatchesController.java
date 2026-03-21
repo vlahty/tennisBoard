@@ -62,4 +62,3 @@ public class CompletedMatchesController extends HttpServlet {
         req.getRequestDispatcher("/WEB-INF/views/completedMatches.jsp").forward(req, resp);
     }
 }
-
