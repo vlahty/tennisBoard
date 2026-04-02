@@ -78,8 +78,8 @@
 
     <h2>Навигация</h2>
     <ul>
-        <li><a href="/new-match">Новый матч</a></li>
-        <li><a href="/matches">Завершенные матчи</a></li>
+        <li><a href="${pageContext.request.contextPath}/new-match">Новый матч</a></li>
+        <li><a href="${pageContext.request.contextPath}/matches">Завершенные матчи</a></li>
     </ul>
 
     <p>Теннисное табло - приложение для отслеживания теннисных матчей</p>

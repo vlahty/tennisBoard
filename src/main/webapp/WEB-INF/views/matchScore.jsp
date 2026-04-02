@@ -33,16 +33,6 @@
             height: auto;
         }
 
-        .player-name {
-            text-align: left;
-            font-weight: bold;
-            width: 300px;
-        }
-
-        .score-column {
-            width: 133px;
-        }
-
         .container {
             display: flex;
             gap: 50px; /* расстояние между кнопками и таблицей */

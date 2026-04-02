@@ -91,7 +91,7 @@
 <div class="container">
     <h1>Новый теннисный матч</h1>
 
-    <form action="/new-match" method="post">
+    <form action="${pageContext.request.contextPath}/new-match" method="post">
         <label for="player1">Имя игрока 1:</label>
         <input type="text" id="player1" name="player1" required oninput="checkPlayers()">
         <br>
